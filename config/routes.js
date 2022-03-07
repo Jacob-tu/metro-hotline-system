@@ -5,13 +5,12 @@ export default [
     routes: [
       {
         path: '/user',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './user/Login',
-          },
-        ],
+        redirect: '/user/login',
+      },
+      {
+        name: 'login',
+        path: '/user/login',
+        component: './user/Login',
       },
       {
         component: './404',
@@ -47,6 +46,17 @@ export default [
     icon: 'table',
     path: '/list',
     component: './TableList',
+  },
+  {
+    name: 'newPage',
+    icon: 'table',
+    path: '/page',
+    component: './Page',
+    access: 'canSeePage',
+    layout: {
+      hideNav: true,
+      hideFooter: true,
+    },
   },
   {
     path: '/',
