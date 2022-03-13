@@ -6,11 +6,6 @@ const waitTime = (time = 100) => {
   });
 };
 
-async function getFakeCaptcha(req, res) {
-  await waitTime(2000);
-  return res.json('captcha-xxx');
-}
-
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 /**
  * 当前用户的权限，如果为空代表没登录
@@ -206,5 +201,4 @@ export default {
       path: '/base/category/list',
     });
   },
-  'GET  /api/login/captcha': getFakeCaptcha,
 };
