@@ -1,10 +1,10 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
-import { ProFormCaptcha, ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
+import { ProFormText, LoginForm } from '@ant-design/pro-form';
 import { history, useModel } from 'umi';
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
+import { login } from '@/services/user';
 import styles from './index.less';
 
 const LoginMessage = ({ content }) => (
@@ -20,7 +20,6 @@ const LoginMessage = ({ content }) => (
 
 const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
-  const [type, setType] = useState('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const fetchUserInfo = async () => {
@@ -34,22 +33,27 @@ const Login = () => {
   const handleSubmit = async (values) => {
     try {
       // 登录
-      const msg = await login({ ...values, type });
+      const msg = await login({ ...values });
 
-      if (msg.status === 'ok') {
+      if (msg.code === 20000) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
+        // 将token保存到localStorage中
+        localStorage.setItem('token', msg.data.token);
+
+        // 获取用户信息并保存到全局初始数据中（namespace 为 @@initialState  的 model）
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
 
         if (!history) return;
         const { query } = history.location;
+        console.log('query', query);
         const { redirect } = query;
-        history.push(redirect || '/');
+        history.replace(redirect || '/');
         return;
       }
 
-      console.log(msg); // 如果失败去设置用户错误信息
+      console.log('如果失败去设置用户错误信息', msg); // 如果失败去设置用户错误信息
 
       setUserLoginState(msg);
     } catch (error) {
@@ -58,7 +62,7 @@ const Login = () => {
     }
   };
 
-  const { status, type: loginType } = userLoginState;
+  const { data } = userLoginState;
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -66,34 +70,21 @@ const Login = () => {
           logo={<img alt="logo" src="/logo.png" />}
           title="南昌地铁热线后台系统"
           subTitle={'请使用 IE11 及以上版本、Firfox、Chrome 浏览器浏览'}
-          initialValues={{
-            autoLogin: true,
-          }}
-          // actions={[
-          //   '其他登录方式 :',
-          //   <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-          //   <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-          //   <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          // ]}
           onFinish={async (values) => {
             await handleSubmit(values);
           }}
         >
-          <Tabs activeKey={type} onChange={setType}>
+          <Tabs>
             <Tabs.TabPane key="account" tab={'账户密码登录'} />
-            {/*<Tabs.TabPane key="mobile" tab={'手机号登录'} />*/}
           </Tabs>
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
-          )}
+          {data === 'fail' && <LoginMessage content={'错误的用户名和密码'} />}
           <ProFormText
             name="username"
             fieldProps={{
               size: 'large',
-              prefix: <UserOutlined className={styles.prefixIcon} />,
+              prefix: <UserOutlined />,
             }}
-            placeholder={'用户名: admin or user'}
             rules={[
               {
                 required: true,
@@ -105,9 +96,8 @@ const Login = () => {
             name="password"
             fieldProps={{
               size: 'large',
-              prefix: <LockOutlined className={styles.prefixIcon} />,
+              prefix: <LockOutlined />,
             }}
-            placeholder={'密码: ant.design'}
             rules={[
               {
                 required: true,

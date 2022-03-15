@@ -5,13 +5,16 @@ import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { outLogin } from '@/services/ant-design-pro/api';
+import { outLogin } from '@/services/user';
 
 /**
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
   await outLogin();
+  // 清除localStorage
+  localStorage.removeItem('token');
+
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query; // Note: There may be security issues, please note
 
@@ -30,9 +33,10 @@ const AvatarDropdown = ({ menu }) => {
   const onMenuClick = useCallback(
     (event) => {
       const { key } = event;
-
       if (key === 'logout') {
+        // 清除全局用户信息
         setInitialState((s) => ({ ...s, currentUser: undefined }));
+        // 这里如果login异步函数之后还有需要执行的代码最好使用await，否则容易出现异步函数执行顺序的问题
         loginOut();
         return;
       }

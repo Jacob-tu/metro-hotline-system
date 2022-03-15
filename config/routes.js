@@ -19,7 +19,7 @@ export default [
   },
   {
     name: '工作台',
-    icon: 'smile',
+    icon: 'dashboard',
     path: '/dashboardworkplace',
     component: './DashboardWorkplace',
   },

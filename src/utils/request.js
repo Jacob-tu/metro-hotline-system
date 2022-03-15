@@ -43,13 +43,14 @@ const errorHandler = function (error) {
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上 cookie
+  prefix: 'http://localhost:8080', // 请求的基地址
 });
 
 // 请求拦截器，在请求之前添加请求头headers，用于身份认证
 request.interceptors.request.use((url, options) => {
-  const token = 'hello';
+  const token = localStorage.getItem('token');
   const headers = {
-    Authorization: `Bearer ${token}`,
+    'X-Token': `${token}`,
   };
 
   return {
