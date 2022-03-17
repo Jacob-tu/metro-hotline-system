@@ -233,12 +233,6 @@ export default [
     ],
   },
   {
-    name: '查询表格',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
     name: '新的页面',
     icon: 'table',
     path: '/new-page',

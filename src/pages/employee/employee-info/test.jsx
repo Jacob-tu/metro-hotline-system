@@ -6,55 +6,56 @@ import ProTable from '@ant-design/pro-table';
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import UpdateForm from './components/UpdateForm';
-import { rule, addRule, updateRule, removeRule } from '@/services/api';
+import { rule, addRule, updateRule, removeRule } from './service';
+import { getEmployeeInfo } from '@/services/employee';
+
+getEmployeeInfo({ page: 1, limit: 20, sort: '+id', job_Number: '', depart: '', name: '' }).then(
+  (res) => {
+    console.log(res);
+  },
+);
+
 /**
- * @en-US Add node
- * @zh-CN 添加节点
+ * 添加节点
+ *
  * @param fields
  */
-
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
     await addRule({ ...fields });
     hide();
-    message.success('Added successfully');
+    message.success('添加成功');
     return true;
   } catch (error) {
     hide();
-    message.error('Adding failed, please try again!');
+    message.error('添加失败请重试！');
     return false;
   }
 };
 /**
- * @en-US Update node
- * @zh-CN 更新节点
+ * 更新节点
  *
  * @param fields
  */
 
-const handleUpdate = async (fields) => {
-  const hide = message.loading('Configuring');
+const handleUpdate = async (fields, currentRow) => {
+  const hide = message.loading('正在配置');
 
   try {
-    await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
-    });
+    await updateRule({ ...currentRow, ...fields });
     hide();
-    message.success('Configuration is successful');
+    message.success('配置成功');
     return true;
   } catch (error) {
     hide();
-    message.error('Configuration failed, please try again!');
+    message.error('配置失败请重试！');
     return false;
   }
 };
 /**
- *  Delete node
- * @zh-CN 删除节点
+ * 删除节点
  *
  * @param selectedRows
  */
@@ -68,41 +69,31 @@ const handleRemove = async (selectedRows) => {
       key: selectedRows.map((row) => row.key),
     });
     hide();
-    message.success('Deleted successfully and will refresh soon');
+    message.success('删除成功，即将刷新');
     return true;
   } catch (error) {
     hide();
-    message.error('Delete failed, please try again');
+    message.error('删除失败，请重试');
     return false;
   }
 };
 
 const TableList = () => {
-  /**
-   * @en-US Pop-up window of new window
-   * @zh-CN 新建窗口的弹窗
-   *  */
+  /** 新建窗口的弹窗 */
   const [createModalVisible, handleModalVisible] = useState(false);
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
-   * */
+  /** 分布更新窗口的弹窗 */
 
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
   const [selectedRowsState, setSelectedRows] = useState([]);
-  /**
-   * @en-US International configuration
-   * @zh-CN 国际化配置
-   * */
 
   const columns = [
     {
       title: '规则名称',
       dataIndex: 'name',
-      tip: 'The rule name is the unique key',
+      tip: '规则名称是唯一的 key',
       render: (dom, entity) => {
         return (
           <a
@@ -126,7 +117,7 @@ const TableList = () => {
       dataIndex: 'callNo',
       sorter: true,
       hideInForm: true,
-      renderText: (val) => `${val}${'万'}`,
+      renderText: (val) => `${val}万`,
     },
     {
       title: '状态',
@@ -164,7 +155,7 @@ const TableList = () => {
         }
 
         if (`${status}` === '3') {
-          return <Input {...rest} placeholder={'请输入异常原因！'} />;
+          return <Input {...rest} placeholder="请输入异常原因！" />;
         }
 
         return defaultRender(item);
@@ -193,7 +184,7 @@ const TableList = () => {
   return (
     <PageContainer>
       <ProTable
-        headerTitle={'查询表格'}
+        headerTitle="查询表格"
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -250,7 +241,7 @@ const TableList = () => {
         </FooterToolbar>
       )}
       <ModalForm
-        title={'新建规则'}
+        title="新建规则"
         width="400px"
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
@@ -280,7 +271,7 @@ const TableList = () => {
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
-          const success = await handleUpdate(value);
+          const success = await handleUpdate(value, currentRow);
 
           if (success) {
             handleUpdateModalVisible(false);
@@ -293,10 +284,7 @@ const TableList = () => {
         }}
         onCancel={() => {
           handleUpdateModalVisible(false);
-
-          if (!showDetail) {
-            setCurrentRow(undefined);
-          }
+          setCurrentRow(undefined);
         }}
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}
