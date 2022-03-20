@@ -9,12 +9,6 @@ import UpdateForm from './components/UpdateForm';
 import { rule, addRule, updateRule, removeRule } from './service';
 import { getEmployeeInfo } from '@/services/employee';
 
-getEmployeeInfo({ page: 1, limit: 20, sort: '+id', job_Number: '', depart: '', name: '' }).then(
-  (res) => {
-    console.log(res);
-  },
-);
-
 /**
  * 添加节点
  *

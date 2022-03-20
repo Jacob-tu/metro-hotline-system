@@ -1,114 +1,124 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Input, Drawer } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
-import UpdateForm from './components/UpdateForm';
-import { rule, addRule, updateRule, removeRule } from './service';
-import { getEmployeeInfo } from '@/services/employee';
+import CreateOrUpdateForm from './components/CreateOrUpdateForm';
+import {
+  getEmployeeInfo,
+  getDepartmentList,
+  updateEmployee,
+  addEmployee,
+} from '@/services/employee';
 
-getEmployeeInfo({ page: 1, limit: 20, sort: '+id', job_Number: '', depart: '', name: '' }).then(
-  (res) => {
-    console.log(res);
-  },
-);
-const getDataSource = async (params) => {
-  console.log(params);
+/**
+ * 添加员工
+ *
+ * @param fields
+ */
+const handleAdd = async (fields) => {
+  console.log('添加员工', fields);
+  // const hide = message.loading('正在添加');
+  //
+  // try {
+  //   await addEmployee({ ...fields });
+  //   hide();
+  //   message.success('添加成功');
+  // } catch (error) {
+  //   hide();
+  //   message.error('添加失败请重试！');
+  // }
+};
+/**
+ * 更新员工信息
+ *
+ * @param fields
+ */
+
+const handleUpdate = async (fields, currentRow) => {
+  // console.log('修改员工信息', 'fields:', fields, 'currentRow', currentRow);
+  const hide = message.loading('正在修改');
+
+  try {
+    await updateEmployee({ ...currentRow, ...fields });
+    hide();
+    message.success('修改成功');
+  } catch (error) {
+    hide();
+    message.error('修改失败请重试！');
+  }
+};
+/**
+ * 删除员工
+ *
+ * @param selectedRows
+ */
+
+const handleRemove = async (selectedRows) => {
+  console.log('删除员工', 'selectedRows:', selectedRows);
+  // const hide = message.loading('正在删除');
+  // if (!selectedRows) return true;
+  //
+  // try {
+  //   await removeRule({
+  //     key: selectedRows.map((row) => row.key),
+  //   });
+  //   hide();
+  //   message.success('删除成功，即将刷新');
+  //   return true;
+  // } catch (error) {
+  //   hide();
+  //   message.error('删除失败，请重试');
+  //   return false;
+  // }
+};
+
+const getDataSource = async (params, sort) => {
+  // console.log(params, sort);
   const res = await getEmployeeInfo({
     page: params.current,
     limit: params.pageSize,
-    sort: '+id',
+    sort: (sort.job_number === 'descend' ? '-id' : '+id') || '+id',
     job_Number: params.job_number || '',
     depart: params.department_id || '',
     name: params.person_name || '',
   });
+  // console.log(res.data);
   return {
     data: res.data.items,
     success: true,
     total: res.data.total,
   };
 };
-/**
- * 添加节点
- *
- * @param fields
- */
-const handleAdd = async (fields) => {
-  const hide = message.loading('正在添加');
 
-  try {
-    await addRule({ ...fields });
-    hide();
-    message.success('添加成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
-  }
-};
-/**
- * 更新节点
- *
- * @param fields
- */
+const EmployeeInfo = () => {
+  /** 添加和更新窗口的弹窗 */
 
-const handleUpdate = async (fields, currentRow) => {
-  const hide = message.loading('正在配置');
-
-  try {
-    await updateRule({ ...currentRow, ...fields });
-    hide();
-    message.success('配置成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('配置失败请重试！');
-    return false;
-  }
-};
-/**
- * 删除节点
- *
- * @param selectedRows
- */
-
-const handleRemove = async (selectedRows) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-
-  try {
-    await removeRule({
-      key: selectedRows.map((row) => row.key),
-    });
-    hide();
-    message.success('删除成功，即将刷新');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('删除失败，请重试');
-    return false;
-  }
-};
-
-const TableList = () => {
-  /** 新建窗口的弹窗 */
-  const [createModalVisible, handleModalVisible] = useState(false);
-  /** 分布更新窗口的弹窗 */
-
-  const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [createOrUpdateModalVisible, handleCreateOrUpdateModalVisible] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
   const [selectedRowsState, setSelectedRows] = useState([]);
 
+  const [valueEnum, setValueEnum] = useState({});
+  useEffect(async () => {
+    const res = await getDepartmentList();
+    const departmentList = res.data;
+    const newValueEnum = {};
+    departmentList.forEach((item) => {
+      newValueEnum[item.department_id] = item.department_name;
+    });
+    setValueEnum(newValueEnum);
+  }, []);
+
   const columns = [
     {
-      title: '规则名称',
-      dataIndex: 'name',
-      tip: '规则名称是唯一的 key',
+      title: '工号',
+      dataIndex: 'job_number',
+      tip: '工号是唯一的 key',
+      sorter: true,
       render: (dom, entity) => {
         return (
           <a
@@ -121,86 +131,6 @@ const TableList = () => {
           </a>
         );
       },
-    },
-    {
-      title: '描述',
-      dataIndex: 'desc',
-      valueType: 'textarea',
-    },
-    {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: (val) => `${val}万`,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
-        },
-      },
-    },
-    {
-      title: '上次调度时间',
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-
-        if (`${status}` === '0') {
-          return false;
-        }
-
-        if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
-        }
-
-        return defaultRender(item);
-      },
-    },
-    {
-      title: '操作',
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
-          }}
-        >
-          配置
-        </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          订阅警报
-        </a>,
-      ],
-    },
-  ];
-  const columns2 = [
-    {
-      title: '工号',
-      dataIndex: 'job_number',
-      valueType: 'textarea',
     },
     {
       title: '姓名',
@@ -222,7 +152,8 @@ const TableList = () => {
     {
       title: '部门',
       dataIndex: 'department_id',
-      valueType: 'textarea',
+      valueType: 'select',
+      valueEnum: valueEnum,
       render: (_, record) => {
         return (
           <>
@@ -249,15 +180,15 @@ const TableList = () => {
       valueType: 'option',
       render: (_, record) => [
         <a
-          key="config"
+          key="update"
           onClick={() => {
-            handleUpdateModalVisible(true);
+            handleCreateOrUpdateModalVisible(true);
             setCurrentRow(record);
           }}
         >
           修改
         </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
+        <a key="delete" onClick={() => alert('删除')}>
           删除
         </a>,
       ],
@@ -278,14 +209,14 @@ const TableList = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              handleModalVisible(true);
+              handleCreateOrUpdateModalVisible(true);
             }}
           >
-            <PlusOutlined /> 新建
+            <PlusOutlined /> 添加
           </Button>,
         ]}
-        request={async (params = {}) => getDataSource(params)}
-        columns={columns2}
+        request={async (params = {}, sort) => getDataSource(params, sort)}
+        columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
             setSelectedRows(selectedRows);
@@ -305,13 +236,11 @@ const TableList = () => {
                 {selectedRowsState.length}
               </a>{' '}
               项 &nbsp;&nbsp;
-              <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo, 0)} 万
-              </span>
             </div>
           }
         >
           <Button
+            type="primary"
             onClick={async () => {
               await handleRemove(selectedRowsState);
               setSelectedRows([]);
@@ -320,56 +249,29 @@ const TableList = () => {
           >
             批量删除
           </Button>
-          <Button type="primary">批量审批</Button>
         </FooterToolbar>
       )}
-      <ModalForm
-        title="新建规则"
-        width="400px"
-        visible={createModalVisible}
-        onVisibleChange={handleModalVisible}
-        onFinish={async (value) => {
-          const success = await handleAdd(value);
 
-          if (success) {
-            handleModalVisible(false);
-
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-      >
-        <ProFormText
-          rules={[
-            {
-              required: true,
-              message: '规则名称为必填项',
-            },
-          ]}
-          width="md"
-          name="name"
-        />
-        <ProFormTextArea width="md" name="desc" />
-      </ModalForm>
-      <UpdateForm
+      <CreateOrUpdateForm
         onSubmit={async (value) => {
-          const success = await handleUpdate(value, currentRow);
-
-          if (success) {
-            handleUpdateModalVisible(false);
+          handleCreateOrUpdateModalVisible(false);
+          if (currentRow === undefined) {
+            await handleAdd(value);
+          } else {
+            await handleUpdate(value, currentRow);
             setCurrentRow(undefined);
-
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
           }
+
+          if (actionRef.current) {
+            actionRef.current.reload();
+          }
+          return true;
         }}
         onCancel={() => {
-          handleUpdateModalVisible(false);
+          handleCreateOrUpdateModalVisible(false);
           setCurrentRow(undefined);
         }}
-        updateModalVisible={updateModalVisible}
+        createOrUpdateModalVisible={createOrUpdateModalVisible}
         values={currentRow || {}}
       />
 
@@ -382,17 +284,14 @@ const TableList = () => {
         }}
         closable={false}
       >
-        {currentRow?.name && (
+        {currentRow?.job_number && (
           <ProDescriptions
             column={2}
-            title={currentRow?.name}
+            title={'员工信息'}
             request={async () => ({
               data: currentRow || {},
             })}
-            params={{
-              id: currentRow?.name,
-            }}
-            columns={columns2}
+            columns={columns}
           />
         )}
       </Drawer>
@@ -400,4 +299,4 @@ const TableList = () => {
   );
 };
 
-export default TableList;
+export default EmployeeInfo;
