@@ -1,9 +1,8 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Input, Drawer } from 'antd';
+import { Button, message, Drawer, Popconfirm } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import CreateOrUpdateForm from './components/CreateOrUpdateForm';
 import {
@@ -11,7 +10,9 @@ import {
   getDepartmentList,
   updateEmployee,
   addEmployee,
+  removeEmployee,
 } from '@/services/employee';
+import { nanoid } from 'nanoid';
 
 /**
  * 添加员工
@@ -19,17 +20,17 @@ import {
  * @param fields
  */
 const handleAdd = async (fields) => {
-  console.log('添加员工', fields);
-  // const hide = message.loading('正在添加');
-  //
-  // try {
-  //   await addEmployee({ ...fields });
-  //   hide();
-  //   message.success('添加成功');
-  // } catch (error) {
-  //   hide();
-  //   message.error('添加失败请重试！');
-  // }
+  // console.log('添加员工', fields);
+  const hide = message.loading('正在添加');
+
+  try {
+    await addEmployee({ ...fields, id: nanoid() });
+    hide();
+    message.success('添加成功');
+  } catch (error) {
+    hide();
+    message.error('添加失败请重试！');
+  }
 };
 /**
  * 更新员工信息
@@ -53,26 +54,26 @@ const handleUpdate = async (fields, currentRow) => {
 /**
  * 删除员工
  *
- * @param selectedRows
+ * @param selectedRow
  */
 
-const handleRemove = async (selectedRows) => {
-  console.log('删除员工', 'selectedRows:', selectedRows);
-  // const hide = message.loading('正在删除');
-  // if (!selectedRows) return true;
-  //
-  // try {
-  //   await removeRule({
-  //     key: selectedRows.map((row) => row.key),
-  //   });
-  //   hide();
-  //   message.success('删除成功，即将刷新');
-  //   return true;
-  // } catch (error) {
-  //   hide();
-  //   message.error('删除失败，请重试');
-  //   return false;
-  // }
+const handleRemove = async (selectedRow) => {
+  console.log('删除员工', 'selectedRow:', selectedRow);
+  const hide = message.loading('正在删除');
+
+  try {
+    await removeEmployee({
+      id: selectedRow.id, // 接口要求int型，这里为string无法删除
+    });
+    console.log('接口参数id要求int型，这里为string无法删除');
+    hide();
+    message.success('删除成功，即将刷新');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('删除失败，请重试');
+    return false;
+  }
 };
 
 const getDataSource = async (params, sort) => {
@@ -85,7 +86,7 @@ const getDataSource = async (params, sort) => {
     depart: params.department_id || '',
     name: params.person_name || '',
   });
-  // console.log(res.data);
+  console.log(res.data);
   return {
     data: res.data.items,
     success: true,
@@ -188,9 +189,18 @@ const EmployeeInfo = () => {
         >
           修改
         </a>,
-        <a key="delete" onClick={() => alert('删除')}>
-          删除
-        </a>,
+        <Popconfirm
+          key="delete"
+          title="确定删除该条员工信息吗?"
+          onConfirm={async () => {
+            await handleRemove(record);
+            actionRef.current?.reload?.();
+          }}
+          okText="是"
+          cancelText="否"
+        >
+          <a>删除</a>
+        </Popconfirm>,
       ],
     },
   ];
@@ -242,9 +252,10 @@ const EmployeeInfo = () => {
           <Button
             type="primary"
             onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
+              alert('批量删除');
+              // await handleRemove(selectedRowsState);
+              // setSelectedRows([]);
+              // actionRef.current?.reloadAndRest?.();
             }}
           >
             批量删除
@@ -262,9 +273,7 @@ const EmployeeInfo = () => {
             setCurrentRow(undefined);
           }
 
-          if (actionRef.current) {
-            actionRef.current.reload();
-          }
+          actionRef.current?.reload(); // 刷新table
           return true;
         }}
         onCancel={() => {

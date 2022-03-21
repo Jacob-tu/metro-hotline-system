@@ -45,10 +45,10 @@ export async function updateEmployee(data, options) {
 }
 /** 删除员工 POST /employee/delete */
 
-export async function deleteEmployee(data, options) {
+export async function removeEmployee(params, options) {
   return request('/employee/delete', {
     method: 'POST',
-    data,
+    params: { ...params },
     ...(options || {}),
   });
 }

@@ -92,12 +92,12 @@ const CreateOrUpdateForm = (props) => {
           name="person_name"
           label="姓名"
           width="md"
-          // rules={[
-          //   {
-          //     required: true,
-          //     message: '请输入姓名！',
-          //   },
-          // ]}
+          rules={[
+            {
+              required: true,
+              message: '请输入姓名！',
+            },
+          ]}
         />
         <ProFormRadio.Group
           name="sex"
@@ -112,23 +112,23 @@ const CreateOrUpdateForm = (props) => {
               label: '女',
             },
           ]}
-          // rules={[
-          //   {
-          //     required: true,
-          //     message: '请选择性别！',
-          //   },
-          // ]}
+          rules={[
+            {
+              required: true,
+              message: '请选择性别！',
+            },
+          ]}
         />
         <ProFormText
           name="job_number"
           label="工号"
           width="md"
-          // rules={[
-          //   {
-          //     required: true,
-          //     message: '请输入工号！',
-          //   },
-          // ]}
+          rules={[
+            {
+              required: true,
+              message: '请输入工号！',
+            },
+          ]}
         />
         <ProFormSelect name="department" label="部门" width="md" valueEnum={valueEnum} />
         <ProFormText name="post" label="职位" width="md" />
@@ -136,12 +136,12 @@ const CreateOrUpdateForm = (props) => {
           name="add_time"
           width="md"
           label="入职时间"
-          // rules={[
-          //   {
-          //     required: true,
-          //     message: '请选择入职时间！',
-          //   },
-          // ]}
+          rules={[
+            {
+              required: true,
+              message: '请选择入职时间！',
+            },
+          ]}
         />
       </StepsForm.StepForm>
       <StepsForm.StepForm
