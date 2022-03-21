@@ -89,6 +89,17 @@ const CreateOrUpdateForm = (props) => {
         onFinish={async () => setCurrentStep((currentStep) => currentStep + 1)}
       >
         <ProFormText
+          name="job_number"
+          label="工号"
+          width="md"
+          rules={[
+            {
+              required: true,
+              message: '请输入工号！',
+            },
+          ]}
+        />
+        <ProFormText
           name="person_name"
           label="姓名"
           width="md"
@@ -119,19 +130,6 @@ const CreateOrUpdateForm = (props) => {
             },
           ]}
         />
-        <ProFormText
-          name="job_number"
-          label="工号"
-          width="md"
-          rules={[
-            {
-              required: true,
-              message: '请输入工号！',
-            },
-          ]}
-        />
-        <ProFormSelect name="department" label="部门" width="md" valueEnum={valueEnum} />
-        <ProFormText name="post" label="职位" width="md" />
         <ProFormDatePicker
           name="add_time"
           width="md"
@@ -143,6 +141,8 @@ const CreateOrUpdateForm = (props) => {
             },
           ]}
         />
+        <ProFormSelect name="department" label="部门" width="md" valueEnum={valueEnum} />
+        <ProFormText name="post" label="职位" width="md" />
       </StepsForm.StepForm>
       <StepsForm.StepForm
         initialValues={{
@@ -159,10 +159,11 @@ const CreateOrUpdateForm = (props) => {
         wrapperCol={{ span: 14 }}
         onFinish={async () => setCurrentStep(0)}
       >
+        <ProFormText name="mobile" label="联系方式" width="md" />
         <ProFormDatePicker name="birthday" label="生日" width="md" />
         <ProFormText name="address" label="居住地址" width="md" />
         <ProFormText name="province" label="籍贯" width="md" />
-        <ProFormText name="mobile" label="联系方式" width="md" />
+
         <ProFormText
           name="email"
           label="邮箱地址"

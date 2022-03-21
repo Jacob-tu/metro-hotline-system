@@ -11,6 +11,7 @@ import {
   updateEmployee,
   addEmployee,
   removeEmployee,
+  getEmployeeInfoById,
 } from '@/services/employee';
 import { nanoid } from 'nanoid';
 
@@ -76,7 +77,7 @@ const handleRemove = async (selectedRow) => {
   }
 };
 
-const getDataSource = async (params, sort) => {
+const fetchTableData = async (params, sort) => {
   // console.log(params, sort);
   const res = await getEmployeeInfo({
     page: params.current,
@@ -91,6 +92,14 @@ const getDataSource = async (params, sort) => {
     data: res.data.items,
     success: true,
     total: res.data.total,
+  };
+};
+
+const fetchDescData = async (id) => {
+  const res = await getEmployeeInfoById({ id });
+  return {
+    data: res.data,
+    success: true,
   };
 };
 
@@ -170,7 +179,7 @@ const EmployeeInfo = () => {
       hideInSearch: true,
     },
     {
-      title: '手机号码',
+      title: '联系方式',
       dataIndex: 'mobile',
       valueType: 'textarea',
       hideInSearch: true,
@@ -225,7 +234,7 @@ const EmployeeInfo = () => {
             <PlusOutlined /> 添加
           </Button>,
         ]}
-        request={async (params = {}, sort) => getDataSource(params, sort)}
+        request={async (params = {}, sort) => fetchTableData(params, sort)}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -296,11 +305,65 @@ const EmployeeInfo = () => {
         {currentRow?.job_number && (
           <ProDescriptions
             column={2}
-            title={'员工信息'}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            columns={columns}
+            title={'员工详细信息'}
+            request={async () => fetchDescData(currentRow.id)}
+            columns={[
+              {
+                title: '工号',
+                dataIndex: 'job_number',
+              },
+              {
+                title: '姓名',
+                dataIndex: 'person_name',
+              },
+              {
+                title: '性别',
+                dataIndex: 'sex',
+              },
+              {
+                title: '入职时间',
+                dataIndex: 'add_time',
+              },
+              {
+                title: '部门',
+                dataIndex: 'department_id',
+                render: (_, record) => {
+                  return (
+                    <>
+                      <span>{record.depart.department_name}</span>
+                    </>
+                  );
+                },
+              },
+              {
+                title: '职位',
+                dataIndex: 'post',
+              },
+              {
+                title: '联系方式',
+                dataIndex: 'mobile',
+              },
+              {
+                title: '生日',
+                dataIndex: 'birthday',
+              },
+              {
+                title: '居住地址',
+                dataIndex: 'address',
+              },
+              {
+                title: '籍贯',
+                dataIndex: 'province',
+              },
+              {
+                title: '邮箱地址',
+                dataIndex: 'email',
+              },
+              {
+                title: '学历',
+                dataIndex: 'degree',
+              },
+            ]}
           />
         )}
       </Drawer>
