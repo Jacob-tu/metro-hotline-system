@@ -6,12 +6,12 @@ import ProTable from '@ant-design/pro-table';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import CreateOrUpdateForm from './components/CreateOrUpdateForm';
 import {
-  getEmployeeInfo,
+  getEmployeeList,
   getDepartmentList,
   updateEmployee,
   addEmployee,
   removeEmployee,
-  getEmployeeInfoById,
+  getEmployeeById,
 } from '@/services/employee';
 import { nanoid } from 'nanoid';
 
@@ -20,6 +20,7 @@ import { nanoid } from 'nanoid';
  *
  * @param fields
  */
+
 const handleAdd = async (fields) => {
   // console.log('添加员工', fields);
   const hide = message.loading('正在添加');
@@ -66,7 +67,6 @@ const handleRemove = async (selectedRow) => {
     await removeEmployee({
       id: selectedRow.id, // 接口要求int型，这里为string无法删除
     });
-    console.log('接口参数id要求int型，这里为string无法删除');
     hide();
     message.success('删除成功，即将刷新');
     return true;
@@ -76,10 +76,16 @@ const handleRemove = async (selectedRow) => {
     return false;
   }
 };
+/**
+ * 获取表格组件数据
+ * @param params  条件查询参数
+ * @param sort  排序参数
+ * @returns {Promise<{total, data, success: boolean}>}
+ */
 
 const fetchTableData = async (params, sort) => {
-  // console.log(params, sort);
-  const res = await getEmployeeInfo({
+  // console.log('params', params, 'sort', sort);
+  const res = await getEmployeeList({
     page: params.current,
     limit: params.pageSize,
     sort: (sort.job_number === 'descend' ? '-id' : '+id') || '+id',
@@ -87,16 +93,21 @@ const fetchTableData = async (params, sort) => {
     depart: params.department_id || '',
     name: params.person_name || '',
   });
-  console.log(res.data);
+  // console.log(res.data);
   return {
     data: res.data.items,
     success: true,
     total: res.data.total,
   };
 };
+/**
+ * 获取描述列表组件数据
+ * @param id  员工 id
+ * @returns {Promise<{data, success: boolean}>}
+ */
 
 const fetchDescData = async (id) => {
-  const res = await getEmployeeInfoById({ id });
+  const res = await getEmployeeById({ id });
   return {
     data: res.data,
     success: true,
@@ -110,7 +121,6 @@ const EmployeeInfo = () => {
   const [showDetail, setShowDetail] = useState(false);
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
-  const [selectedRowsState, setSelectedRows] = useState([]);
 
   const [valueEnum, setValueEnum] = useState({});
   useEffect(async () => {
@@ -236,41 +246,7 @@ const EmployeeInfo = () => {
         ]}
         request={async (params = {}, sort) => fetchTableData(params, sort)}
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              项 &nbsp;&nbsp;
-            </div>
-          }
-        >
-          <Button
-            type="primary"
-            onClick={async () => {
-              alert('批量删除');
-              // await handleRemove(selectedRowsState);
-              // setSelectedRows([]);
-              // actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
-        </FooterToolbar>
-      )}
 
       <CreateOrUpdateForm
         onSubmit={async (value) => {

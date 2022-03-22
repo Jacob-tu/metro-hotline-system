@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 /** 获取员工信息列表 GET /employee/list */
 
-export async function getEmployeeInfo(params, options) {
+export async function getEmployeeList(params, options) {
   return request('/employee/list', {
     method: 'GET',
     params: { ...params },
@@ -18,7 +18,7 @@ export async function getDepartmentList(options) {
 }
 /** 通过id获取员工信息 GET /employee/findById.do */
 
-export async function getEmployeeInfoById(params, options) {
+export async function getEmployeeById(params, options) {
   return request('/employee/findById.do', {
     method: 'GET',
     params: { ...params },
