@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { getPrice, getStationList } from '@/services/station/fare-query';
+import { getPrice, getAllStation } from '@/services/station/fare-query';
 
 /**
  * 获取表格组件数据
@@ -36,7 +36,7 @@ const FareQuery = () => {
 
   const [valueEnum, setValueEnum] = useState({});
   useEffect(async () => {
-    const res = await getStationList();
+    const res = await getAllStation();
     const stationList = res.data;
     const newValueEnum = {};
     stationList.forEach((item) => {

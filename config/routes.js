@@ -154,11 +154,6 @@ export default [
         component: './business/station-query',
       },
       {
-        path: '/business/time-query',
-        name: '地铁时刻查询',
-        component: './business/time-query',
-      },
-      {
         path: '/business/station-around-query',
         name: '站点周边查询',
         component: './business/station-around-query',

@@ -19,17 +19,17 @@ import CreateOrUpdateForm from '@/pages/business/station-query/components/Create
  */
 
 const handleAdd = async (fields) => {
-  console.log('添加站点', fields);
-  const hide = message.loading('正在添加');
-
-  try {
-    await addStation({ ...fields, station_id: nanoid() });
-    hide();
-    message.success('添加成功');
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-  }
+  console.log('添加站点', fields, 'total', total);
+  // const hide = message.loading('正在添加');
+  //
+  // try {
+  //   await addStation({ ...fields, station_id: nanoid() });
+  //   hide();
+  //   message.success('添加成功');
+  // } catch (error) {
+  //   hide();
+  //   message.error('添加失败请重试！');
+  // }
 };
 /**
  * 更新站点信息
@@ -63,7 +63,7 @@ const handleRemove = async (selectedRow) => {
 
   try {
     await removeStation({
-      station_id: selectedRow.station_id, // 接口要求int型，这里为string无法删除
+      id: selectedRow.station_id,
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -79,7 +79,7 @@ const handleRemove = async (selectedRow) => {
  * @param params  条件查询参数
  * @returns {Promise<{total, data, success: boolean}>}
  */
-
+let total = 0;
 const fetchTableData = async (params) => {
   // console.log('params', params);
   const res = await getStationList({
@@ -90,6 +90,7 @@ const fetchTableData = async (params) => {
     stationname: params.station_name || '',
     lineid: null,
   });
+  total = res.data.total;
   return {
     data: res.data.items,
     success: true,
@@ -105,9 +106,9 @@ const StationQuery = () => {
 
   const columns = [
     {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
+      title: '站点编号',
+      dataIndex: 'station_id',
+      hideInSearch: true,
     },
     {
       title: '站点名称',
@@ -152,7 +153,7 @@ const StationQuery = () => {
           title="确定删除该条站点信息吗?"
           onConfirm={async () => {
             await handleRemove(record);
-            actionRef.current?.reload?.();
+            actionRef.current?.reload?.(); // 刷新table
           }}
           okText="是"
           cancelText="否"

@@ -28,10 +28,10 @@ export async function addStation(data, options) {
 }
 /** 删除站点信息 POST /station/deleteStation.do */
 
-export async function removeStation(data, options) {
+export async function removeStation(params, options) {
   return request('/station/deleteStation.do', {
     method: 'POST',
-    data,
+    params: { ...params },
     ...(options || {}),
   });
 }
