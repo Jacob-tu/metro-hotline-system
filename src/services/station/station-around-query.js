@@ -10,10 +10,10 @@ export async function getStationAroundList(params, options) {
 }
 /** 获取站点周边信息分类 GET /Pub_enum/findOrder_stat.do */
 
-export async function getStationAroundCategory(params, options) {
+export async function getInfoType(params, options) {
   return request('/Pub_enum/findOrder_stat.do', {
     method: 'GET',
-    params: { ...params },
+    params: { ...params, serial_no: 'STATION_REL_INFO_TYPE' },
     ...(options || {}),
   });
 }

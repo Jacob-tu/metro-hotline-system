@@ -7,7 +7,7 @@ import CreateOrUpdateForm from '@/pages/business/station-around-query/components
 import { getAllStation } from '@/services/station/fare-query';
 import {
   addStationAround,
-  getStationAroundCategory,
+  getInfoType,
   getStationAroundList,
   removeStationAround,
   updateStationAround,
@@ -77,35 +77,31 @@ const handleRemove = async (selectedRow) => {
   }
 };
 /**
- * 生成站点id和名称的映射和Select需要的valueEnum，下面这两个函数好像还可以封装成工厂函数，根据不同的参数返回不同的对象
+ * 生成站点名称 Select 的 valueEnum
  */
 
-const get_station_map_and_valueEnum = async () => {
+const getStationValueEnum = async () => {
   const res = await getAllStation();
-  const map = {},
-    valueEnum = {};
+  const map = {};
   res.data.forEach((item) => {
     map[item.station_id] = item.station_name;
-    valueEnum[item.station_name] = item.station_name;
   });
-  return { map, valueEnum };
+  return map;
 };
-const { map: stationMap, valueEnum: stationValueEnum } = await get_station_map_and_valueEnum();
+const stationValueEnum = await getStationValueEnum();
 /**
- * 生成站点周边信息分类id和名称的映射和Select需要的valueEnum
+ * 生成站点周边信息分类 Select 的 valueEnum
  */
 
-const get_category_map_and_valueEnum = async () => {
-  const res = await getStationAroundCategory({ serial_no: 'STATION_REL_INFO_TYPE' });
-  const map = {},
-    valueEnum = {};
+const getTypeValueEnum = async () => {
+  const res = await getInfoType({});
+  const map = {};
   res.data.forEach((item) => {
     map[item.enum_id] = item.enum_name;
-    valueEnum[item.enum_name] = item.enum_name;
   });
-  return { map, valueEnum };
+  return map;
 };
-const { map: categoryMap, valueEnum: categoryValueEnum } = await get_category_map_and_valueEnum();
+const typeValueEnum = await getTypeValueEnum();
 /**
  * 获取表格组件数据
  * @param params  条件查询参数
@@ -125,8 +121,8 @@ const fetchTableData = async (params, sort) => {
   res.data.items.map((item, index) => {
     /** dataIndex作为唯一的rowKey，station_name为站点名，enum_name为分类名 */
     item.dataIndex = index;
-    item.station_name = stationMap[item.station_id];
-    item.enum_name = categoryMap[item.station_side_type];
+    item.station_name = stationValueEnum[item.station_id];
+    item.enum_name = typeValueEnum[item.station_side_type];
     return item;
   });
   return {
@@ -159,14 +155,14 @@ const StationAroundQuery = () => {
       title: '站点周边信息',
       dataIndex: 'station_side_info',
       ellipsis: true,
-      tip: '信息过长会自动收缩',
-      width: 500,
+      tip: '内容过长会自动收缩',
+      width: 400,
     },
     {
       title: '信息分类',
       dataIndex: 'enum_name',
       valueType: 'select',
-      valueEnum: categoryValueEnum,
+      valueEnum: typeValueEnum,
     },
     {
       title: '路线',
@@ -254,7 +250,7 @@ const StationAroundQuery = () => {
         createOrUpdateModalVisible={createOrUpdateModalVisible}
         values={currentRow || {}}
         stationValueEnum={stationValueEnum}
-        categoryValueEnum={categoryValueEnum}
+        typeValueEnum={typeValueEnum}
       />
     </PageContainer>
   );

@@ -23,8 +23,8 @@ const CreateOrUpdateForm = (props) => {
       }}
       onFinish={props.onSubmit}
       initialValues={{
-        station_id: props.values.station_id,
-        station_side_type: props.values.station_side_type,
+        station_name: props.values.station_name,
+        enum_name: props.values.enum_name,
         line_id: props.values.line_id,
         station_side_info: props.values.station_side_info,
         remark: props.values.remark,
@@ -32,7 +32,7 @@ const CreateOrUpdateForm = (props) => {
     >
       <ProForm.Group>
         <ProFormSelect
-          name="station_id"
+          name="station_name"
           label="站点名称"
           width="md"
           valueEnum={props.stationValueEnum}
@@ -42,23 +42,21 @@ const CreateOrUpdateForm = (props) => {
               message: '站点名称为必填项！',
             },
           ]}
-          disabled={Object.keys(props.values).length !== 0}
         />
         <ProFormSelect name="line_id" label="路线编号" width="md" valueEnum={valueEnum} />
       </ProForm.Group>
 
       <ProFormSelect
-        name="station_side_type"
+        name="enum_name"
         label="信息分类"
         width="md"
-        valueEnum={props.typeValueEnum}
+        valueEnum={props.categoryValueEnum}
         rules={[
           {
             required: true,
             message: '信息分类为必填项！',
           },
         ]}
-        disabled={Object.keys(props.values).length !== 0}
       />
 
       <ProFormTextArea

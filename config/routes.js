@@ -97,7 +97,7 @@ export default [
       },
       {
         path: '/order/order-list',
-        name: '工单列表',
+        name: '全部工单列表',
         component: './order/order-list',
       },
       {
