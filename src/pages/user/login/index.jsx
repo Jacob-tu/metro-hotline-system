@@ -6,6 +6,7 @@ import { history, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { login } from '@/services/user';
 import styles from './index.less';
+import { setToken } from '@/utils/auth';
 
 const LoginMessage = ({ content }) => (
   <Alert
@@ -38,9 +39,8 @@ const Login = () => {
       if (msg.code === 20000) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
-        // 将token保存到localStorage中
-        localStorage.setItem('token', msg.data.token);
-
+        /** 将 token 保存在 Cookie 中 */
+        setToken(msg.data.token);
         // 获取用户信息并保存到全局初始数据中（namespace 为 @@initialState  的 model）
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */

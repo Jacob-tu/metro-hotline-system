@@ -36,3 +36,21 @@ export async function outLogin(options) {
     ...(options || {}),
   });
 }
+/** 获取所有用户 POST /user/findAllUser.do */
+
+export async function getAllUser(params, options) {
+  return request('/user/findAllUser.do', {
+    method: 'GET',
+    params: { ...params },
+    ...(options || {}),
+  });
+}
+/** 获取登录名，需要携带Cookie: Admin-Token GET /order/findLoginName */
+
+export async function getLoginName(params, options) {
+  return request('/order/findLoginName', {
+    method: 'GET',
+    params: { ...params },
+    ...(options || {}),
+  });
+}

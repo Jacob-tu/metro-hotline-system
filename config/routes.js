@@ -10,7 +10,7 @@ export default [
       {
         name: '登录',
         path: '/user/login',
-        component: './user/Login',
+        component: './user/login',
       },
       {
         component: './404',
@@ -88,27 +88,75 @@ export default [
     routes: [
       {
         path: '/order',
-        redirect: '/order/todo-order',
+        redirect: '/order/todo',
       },
       {
-        path: '/order/todo-order',
+        path: '/order/todo',
         name: '待处理工单',
-        component: './order/todo-order',
+        component: './order/todo',
       },
       {
-        path: '/order/order-list',
+        name: '工单详情页',
+        path: '/order/todo/profile',
+        component: './order/profile',
+        hideInMenu: true,
+      },
+      {
+        name: '创建工单',
+        path: '/order/todo/add-order',
+        component: './order/add-order',
+        hideInMenu: true,
+      },
+      {
+        path: '/order/all-order',
         name: '全部工单列表',
-        component: './order/order-list',
+        component: './order/all-order',
       },
       {
-        path: '/order/overtime-order-soon',
+        name: '工单详情页',
+        path: '/order/all-order/profile',
+        component: './order/profile',
+        hideInMenu: true,
+      },
+      {
+        name: '创建工单',
+        path: '/order/all-order/add-order',
+        component: './order/add-order',
+        hideInMenu: true,
+      },
+      {
+        path: '/order/overtime-soon',
         name: '即将超时工单',
-        component: './order/overtime-order-soon',
+        component: './order/overtime-soon',
       },
       {
-        path: '/order/overtime-order',
+        name: '工单详情页',
+        path: '/order/overtime-soon/profile',
+        component: './order/profile',
+        hideInMenu: true,
+      },
+      {
+        name: '创建工单',
+        path: '/order/overtime-soon/add-order',
+        component: './order/add-order',
+        hideInMenu: true,
+      },
+      {
+        path: '/order/overtime',
         name: '已超时工单',
-        component: './order/overtime-order',
+        component: './order/overtime',
+      },
+      {
+        name: '工单详情页',
+        path: '/order/overtime/profile',
+        component: './order/profile',
+        hideInMenu: true,
+      },
+      {
+        name: '创建工单',
+        path: '/order/overtime/add-order',
+        component: './order/add-order',
+        hideInMenu: true,
       },
       {
         component: './404',
@@ -122,12 +170,12 @@ export default [
     routes: [
       {
         path: '/notice',
-        redirect: '/notice/notice-list',
+        redirect: '/notice/table-list',
       },
       {
-        path: '/notice/notice-list',
+        path: '/notice/table-list',
         name: '公告信息',
-        component: './notice/notice-list',
+        component: './notice/table-list',
       },
       {
         component: './404',
@@ -170,12 +218,12 @@ export default [
     routes: [
       {
         path: '/knowledge',
-        redirect: '/knowledge/knowledge-list',
+        redirect: '/knowledge/table-list',
       },
       {
-        path: '/knowledge/knowledge-list',
+        path: '/knowledge/table-list',
         name: '知识库信息列表',
-        component: './knowledge/knowledge-list',
+        component: './knowledge/table-list',
       },
       {
         component: './404',

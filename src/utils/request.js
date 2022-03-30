@@ -1,5 +1,6 @@
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import { getToken } from '@/utils/auth';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -48,7 +49,7 @@ const request = extend({
 
 // 请求拦截器，在请求之前添加请求头headers，用于身份认证
 request.interceptors.request.use((url, options) => {
-  const token = localStorage.getItem('token');
+  const token = getToken();
   const headers = {
     'X-Token': `${token}`,
   };

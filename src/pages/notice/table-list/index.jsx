@@ -7,7 +7,7 @@ import CreateOrUpdateForm from '@/pages/business/station-around-query/components
 import { getAllStation } from '@/services/station/fare-query';
 import {
   addStationAround,
-  getStationAroundCategory,
+  getInfoType,
   getStationAroundList,
   removeStationAround,
   updateStationAround,
@@ -96,7 +96,7 @@ const { map: stationMap, valueEnum: stationValueEnum } = await get_station_map_a
  */
 
 const get_category_map_and_valueEnum = async () => {
-  const res = await getStationAroundCategory({ serial_no: 'STATION_REL_INFO_TYPE' });
+  const res = await getInfoType({});
   const map = {},
     valueEnum = {};
   res.data.forEach((item) => {
@@ -136,7 +136,7 @@ const fetchTableData = async (params, sort) => {
   };
 };
 
-const StationAroundQuery = () => {
+const TableList = () => {
   /** 添加和更新窗口的弹窗 */
   const [createOrUpdateModalVisible, handleCreateOrUpdateModalVisible] = useState(false);
   const actionRef = useRef();
@@ -260,4 +260,4 @@ const StationAroundQuery = () => {
   );
 };
 
-export default StationAroundQuery;
+export default TableList;

@@ -1,35 +1,12 @@
-import { Button, message, Drawer, Popconfirm } from 'antd';
+import { Button } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { getAllOrderList, getOrderStatus, getOrderType } from '@/services/order/order-list';
+import { getAllOrderList } from '@/services/order/all-order';
+import { history } from 'umi';
+import { PlusOutlined } from '@ant-design/icons';
+import { statusValueEnum, typeValueEnum } from '@/pages/order/utils/getValueEnum';
 
-/**
- * 生成工单状态 Select 的 valueEnum
- */
-
-const getStatusValueEnum = async () => {
-  const res = await getOrderStatus({});
-  const map = {};
-  res.data.forEach((item) => {
-    map[item.enum_id] = item.enum_name;
-  });
-  return map;
-};
-const statusValueEnum = await getStatusValueEnum();
-/**
- * 生成工单类型 Select 的 valueEnum
- */
-
-const getTypeValueEnum = async () => {
-  const res = await getOrderType({});
-  const map = {};
-  res.data.forEach((item) => {
-    map[item.enum_id] = item.enum_name;
-  });
-  return map;
-};
-const typeValueEnum = await getTypeValueEnum();
 /**
  * 获取表格组件数据
  * @param params  条件查询参数
@@ -53,7 +30,7 @@ const fetchTableData = async (params) => {
   };
 };
 
-const AllOrderList = () => {
+const AllOrder = () => {
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
 
@@ -79,7 +56,7 @@ const AllOrderList = () => {
       dataIndex: 'order_title',
       ellipsis: true,
       tip: '内容过长会自动收缩',
-      width: 150,
+      // width: 130,
     },
     {
       title: '工单状态',
@@ -93,17 +70,17 @@ const AllOrderList = () => {
       hideInSearch: true,
       ellipsis: true,
       tip: '内容过长会自动收缩',
-      width: 250,
-      copyable: true,
+      // width: 200,
     },
     {
-      title: '客户',
+      title: '客户姓名',
       dataIndex: 'custom_id',
       hideInSearch: true,
     },
     {
       title: '客户电话',
       dataIndex: 'custom_tel',
+      copyable: true,
     },
     {
       title: '创建人',
@@ -124,6 +101,7 @@ const AllOrderList = () => {
           key="check"
           onClick={() => {
             setCurrentRow(record);
+            history.push(`./all-order/profile?order_id=${record?.order_id}&isCheck=${true}`);
           }}
         >
           查看
@@ -132,6 +110,7 @@ const AllOrderList = () => {
           key="handle"
           onClick={() => {
             setCurrentRow(record);
+            history.push(`./all-order/profile?order_id=${record?.order_id}&isCheck=${false}`);
           }}
         >
           处理
@@ -150,6 +129,17 @@ const AllOrderList = () => {
           labelWidth: 120,
           span: 6,
         }}
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              history.push(`./all-order/add-order`);
+            }}
+          >
+            <PlusOutlined /> 创建工单
+          </Button>,
+        ]}
         request={async (params = {}) => fetchTableData(params)}
         columns={columns}
         pagination={{ showQuickJumper: true }}
@@ -158,4 +148,4 @@ const AllOrderList = () => {
   );
 };
 
-export default AllOrderList;
+export default AllOrder;

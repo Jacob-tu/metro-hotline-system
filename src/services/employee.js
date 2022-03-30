@@ -52,3 +52,12 @@ export async function removeEmployee(params, options) {
     ...(options || {}),
   });
 }
+/** 获取所有部门下的所有员工 GET /employee/findAllByDepartment.do */
+
+export async function getAllEmployeeByDepartment(params, options) {
+  return request('/employee/findAllByDepartment.do', {
+    method: 'GET',
+    params: { ...params },
+    ...(options || {}),
+  });
+}

@@ -70,6 +70,7 @@ const CreateOrUpdateForm = (props) => {
         fieldProps={{
           allowClear: true,
           autoSize: { minRows: 3, maxRows: 5 },
+          showCount: true,
           maxLength: 300,
         }}
         rules={[

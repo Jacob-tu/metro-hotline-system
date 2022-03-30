@@ -8,6 +8,7 @@ import defaultSettings from '../config/defaultSettings';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 import { message } from 'antd';
+import { getToken } from '@/utils/auth';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 
@@ -21,7 +22,7 @@ export const initialStateConfig = {
 export async function getInitialState() {
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       const msg = await queryCurrentUser({ token });
       return msg.data;
     } catch (error) {
