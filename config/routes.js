@@ -234,6 +234,7 @@ export default [
     path: '/system',
     name: '系统管理',
     icon: 'LockOutlined',
+    access: 'adminRouteFilter',
     routes: [
       {
         path: '/system',
@@ -255,32 +256,11 @@ export default [
     ],
   },
   {
-    path: '/admin',
-    name: '管理页',
-    icon: 'crown',
-    // access: 'canAdmin',
-    routes: [
-      {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: '二级管理页',
-        icon: 'smile',
-        component: './Admin',
-      },
-      {
-        component: './404',
-      },
-    ],
-  },
-  {
     name: '新的页面',
     icon: 'table',
     path: '/new-page',
     component: './NewPage',
-    access: 'canSeePage',
+    access: 'normalRouteFilter',
   },
   {
     path: '/',
