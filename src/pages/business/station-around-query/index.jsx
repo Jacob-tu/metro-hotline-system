@@ -12,6 +12,7 @@ import {
   removeStationAround,
   updateStationAround,
 } from '@/services/station/station-around-query';
+import { history } from 'umi';
 
 /**
  * 添加站点周边信息
@@ -181,6 +182,18 @@ const StationAroundQuery = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
+        <a
+          key="check"
+          onClick={() => {
+            setCurrentRow(record);
+            // console.log(record);
+            history.push(
+              `./station-around-query/map-check?station_id=${record?.station_id}&station_side_type=${record?.station_side_type}`,
+            );
+          }}
+        >
+          查看
+        </a>,
         <a
           key="update"
           onClick={() => {

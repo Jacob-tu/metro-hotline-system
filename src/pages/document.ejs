@@ -24,6 +24,17 @@
     />
     <title>南昌地铁热线后台</title>
     <link rel="icon" href="<%= context.config.publicPath +'favicon.ico'%>" type="image/x-icon" />
+    <!--  引入百度地图 API 的 JS 文件，Referer白名单为*，没有对任何域名做限制。-->
+    <!--  (谨慎使用，前端代码容易泄露AK，被其他网站非法调用，上线前可以用作Debug，线上正式ak请设置合理的Referer白名单)-->
+    <script
+      type="text/javascript"
+      src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=8P77V2VvXAfPOe0iNMgq5Bml4ytNAoD9"
+    ></script>
+    <!--  引入地铁图-->
+    <script
+      type="text/javascript"
+      src="https://api.map.baidu.com/api?type=subway&v=1.0&ak=8P77V2VvXAfPOe0iNMgq5Bml4ytNAoD9"
+    ></script>
   </head>
   <body>
     <noscript>

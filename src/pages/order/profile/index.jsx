@@ -4,12 +4,7 @@ import ProDescriptions from '@ant-design/pro-descriptions';
 import React, { useState, useEffect } from 'react';
 import { history, useRequest } from 'umi';
 import styles from './style.less';
-import {
-  addOrder,
-  getOrderDetail,
-  getOrderProcess,
-  processOrder,
-} from '@/services/order/all-order';
+import { getOrderDetail, getOrderProcess, processOrder } from '@/services/order/all-order';
 import {
   dispatchValueEnum,
   sourceValueEnum,

@@ -207,6 +207,27 @@ export default [
         component: './business/station-around-query',
       },
       {
+        path: '/business/station-around-query/map-check',
+        name: '查看地图',
+        component: './business/map-check',
+        hideInMenu: true,
+        layout: {
+          hideMenu: false,
+          hideNav: false,
+          hideFooter: true,
+        },
+      },
+      {
+        path: '/business/subway-check',
+        name: '查看地铁图',
+        component: './business/subway-check',
+        layout: {
+          hideMenu: false,
+          hideNav: false,
+          hideFooter: true,
+        },
+      },
+      {
         component: './404',
       },
     ],
@@ -249,6 +270,66 @@ export default [
         path: '/system/role-management',
         name: '角色管理',
         component: './system/role-management',
+      },
+      {
+        component: './404',
+      },
+    ],
+  },
+  {
+    path: '/wechat',
+    name: '微信公众号管理',
+    icon: 'WechatOutlined',
+    routes: [
+      {
+        path: '/wechat',
+        redirect: '/wechat/app-list',
+      },
+      {
+        path: '/wechat/app-list',
+        name: '公众号列表',
+        component: './wechat/app-list',
+        icon: 'UnorderedListOutlined',
+      },
+      {
+        path: '/wechat/user-tags',
+        name: '用户标签',
+        component: './wechat/user-tags',
+      },
+      {
+        path: '/wechat/user-list',
+        name: '公众号用户',
+        component: './wechat/user-list',
+      },
+      {
+        path: '/wechat/user-msg',
+        name: '用户消息',
+        component: './wechat/user-msg',
+      },
+      {
+        path: '/wechat/material',
+        name: '素材管理',
+        component: './wechat/material',
+      },
+      {
+        path: '/wechat/menus',
+        name: '自定义菜单',
+        component: './wechat/menus',
+      },
+      {
+        path: '/wechat/autoreply',
+        name: '消息自动回复',
+        component: './wechat/autoreply',
+      },
+      {
+        path: '/wechat/mass-msg',
+        name: '消息群发',
+        component: './wechat/mass-msg',
+      },
+      {
+        path: '/wechat/statistics',
+        name: '数据统计',
+        component: './wechat/statistics',
       },
       {
         component: './404',
