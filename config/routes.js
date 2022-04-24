@@ -175,7 +175,7 @@ export default [
       {
         path: '/notice/table-list',
         name: '公告信息',
-        component: './notice/table-list',
+        component: './notice',
       },
       {
         component: './404',
@@ -244,7 +244,7 @@ export default [
       {
         path: '/knowledge/table-list',
         name: '知识库信息列表',
-        component: './knowledge/table-list',
+        component: './knowledge',
       },
       {
         component: './404',

@@ -5,10 +5,10 @@ import {
   ModalForm,
   ProFormSelect,
   ProForm,
+  ProFormTimePicker,
 } from '@ant-design/pro-form';
 
 const CreateOrUpdateForm = (props) => {
-  /** 路线编号valueEnum */
   const [valueEnum, setValueEnum] = useState({});
   return (
     <ModalForm
@@ -23,61 +23,62 @@ const CreateOrUpdateForm = (props) => {
       }}
       onFinish={props.onSubmit}
       initialValues={{
-        station_name: props.values.station_name,
-        enum_name: props.values.enum_name,
-        line_id: props.values.line_id,
-        station_side_info: props.values.station_side_info,
-        remark: props.values.remark,
+        TITLE: props.values.TITLE,
+        KNOWLEDGE_TYPE: props.values.KNOWLEDGE_TYPE,
+        ADD_PERSON: props.values.ADD_PERSON,
+        CONTENT: props.values.CONTENT,
       }}
     >
       <ProForm.Group>
-        <ProFormSelect
-          name="station_name"
-          label="站点名称"
+        <ProFormText
+          name="TITLE"
+          label="知识标题"
           width="md"
-          valueEnum={props.stationValueEnum}
           rules={[
             {
               required: true,
-              message: '站点名称为必填项！',
+              message: '知识标题为必填项！',
             },
           ]}
         />
-        <ProFormSelect name="line_id" label="路线编号" width="md" valueEnum={valueEnum} />
+        <ProFormSelect
+          name="KNOWLEDGE_TYPE"
+          label="知识类型"
+          width="md"
+          valueEnum={valueEnum}
+          rules={[
+            {
+              required: true,
+              message: '知识类型为必填项！',
+            },
+          ]}
+        />
       </ProForm.Group>
 
-      <ProFormSelect
-        name="enum_name"
-        label="信息分类"
+      <ProFormText
+        name="ADD_PERSON"
         width="md"
-        valueEnum={props.categoryValueEnum}
+        label="添加人"
         rules={[
           {
             required: true,
-            message: '信息分类为必填项！',
+            message: '该项为必填项！',
           },
         ]}
       />
-
       <ProFormTextArea
-        name="station_side_info"
-        label="周边信息"
-        tooltip="最长为 300 字"
+        name="CONTENT"
+        label="知识内容"
+        tooltip="最长为 600 字"
         width={666}
         allowClear
         fieldProps={{
           allowClear: true,
-          autoSize: { minRows: 3, maxRows: 5 },
-          maxLength: 300,
+          autoSize: { minRows: 3, maxRows: 6 },
+          showCount: true,
+          maxLength: 600,
         }}
-        rules={[
-          {
-            required: true,
-            message: '周边信息为必填项！',
-          },
-        ]}
       />
-      <ProFormText name="remark" label="备注" width="md" />
     </ModalForm>
   );
 };
