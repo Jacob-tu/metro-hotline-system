@@ -8,6 +8,12 @@ import {
   ProFormDateTimePicker,
 } from '@ant-design/pro-form';
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const CreateOrUpdateForm = (props) => {
   const [valueEnum, setValueEnum] = useState({});
   return (

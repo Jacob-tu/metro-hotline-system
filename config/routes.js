@@ -23,45 +23,45 @@ export default [
     path: '/dashboard',
     component: './DashboardWorkplace',
   },
-  {
-    path: '/record',
-    name: '话务查询',
-    icon: 'PhoneOutlined',
-    routes: [
-      {
-        path: '/record',
-        redirect: '/record/record-list',
-      },
-      {
-        path: '/record/record-list',
-        name: '话务信息列表',
-        component: './record/record-list',
-      },
-      {
-        path: '/record/record-stat',
-        name: '话务量工单统计',
-        component: './record/record-stat',
-      },
-      {
-        path: '/record/satisfaction-view',
-        name: '满意度查看',
-        component: './record/satisfaction-view',
-      },
-      {
-        path: '/record/satisfaction-stat',
-        name: '满意度统计',
-        component: './record/satisfaction-stat',
-      },
-      {
-        path: '/record/voice-box',
-        name: '语音信箱',
-        component: './record/voice-box',
-      },
-      {
-        component: './404',
-      },
-    ],
-  },
+  // {
+  //   path: '/record',
+  //   name: '话务查询',
+  //   icon: 'PhoneOutlined',
+  //   routes: [
+  //     {
+  //       path: '/record',
+  //       redirect: '/record/record-list',
+  //     },
+  //     {
+  //       path: '/record/record-list',
+  //       name: '话务信息列表',
+  //       component: './record/record-list',
+  //     },
+  //     {
+  //       path: '/record/record-stat',
+  //       name: '话务量工单统计',
+  //       component: './record/record-stat',
+  //     },
+  //     {
+  //       path: '/record/satisfaction-view',
+  //       name: '满意度查看',
+  //       component: './record/satisfaction-view',
+  //     },
+  //     {
+  //       path: '/record/satisfaction-stat',
+  //       name: '满意度统计',
+  //       component: './record/satisfaction-stat',
+  //     },
+  //     {
+  //       path: '/record/voice-box',
+  //       name: '语音信箱',
+  //       component: './record/voice-box',
+  //     },
+  //     {
+  //       component: './404',
+  //     },
+  //   ],
+  // },
   {
     name: '员工管理',
     icon: 'UserOutlined',
@@ -265,6 +265,11 @@ export default [
         path: '/system/user-management',
         name: '用户管理',
         component: './system/user-management',
+        layout: {
+          hideMenu: false,
+          hideNav: false,
+          hideFooter: true,
+        },
       },
       {
         path: '/system/role-management',
@@ -278,7 +283,7 @@ export default [
   },
   {
     path: '/wechat',
-    name: '微信公众号管理',
+    name: '微信公众号',
     icon: 'WechatOutlined',
     routes: [
       {
@@ -286,63 +291,73 @@ export default [
         redirect: '/wechat/app-list',
       },
       {
-        path: '/wechat/app-list',
-        name: '公众号列表',
-        component: './wechat/app-list',
-        icon: 'UnorderedListOutlined',
+        path: '/wechat/chat',
+        name: '微信聊天',
+        component: './wechat/chat',
+        layout: {
+          hideMenu: false,
+          hideNav: false,
+          hideFooter: true,
+        },
       },
-      {
-        path: '/wechat/user-tags',
-        name: '用户标签',
-        component: './wechat/user-tags',
-      },
-      {
-        path: '/wechat/user-list',
-        name: '公众号用户',
-        component: './wechat/user-list',
-      },
-      {
-        path: '/wechat/user-msg',
-        name: '用户消息',
-        component: './wechat/user-msg',
-      },
-      {
-        path: '/wechat/material',
-        name: '素材管理',
-        component: './wechat/material',
-      },
-      {
-        path: '/wechat/menus',
-        name: '自定义菜单',
-        component: './wechat/menus',
-      },
-      {
-        path: '/wechat/autoreply',
-        name: '消息自动回复',
-        component: './wechat/autoreply',
-      },
-      {
-        path: '/wechat/mass-msg',
-        name: '消息群发',
-        component: './wechat/mass-msg',
-      },
-      {
-        path: '/wechat/statistics',
-        name: '数据统计',
-        component: './wechat/statistics',
-      },
+      // {
+      //   path: '/wechat/app-list',
+      //   name: '公众号列表',
+      //   component: './wechat/app-list',
+      //   icon: 'UnorderedListOutlined',
+      // },
+      // {
+      //   path: '/wechat/user-tags',
+      //   name: '用户标签',
+      //   component: './wechat/user-tags',
+      // },
+      // {
+      //   path: '/wechat/user-list',
+      //   name: '公众号用户',
+      //   component: './wechat/user-list',
+      // },
+      // {
+      //   path: '/wechat/user-msg',
+      //   name: '用户消息',
+      //   component: './wechat/user-msg',
+      // },
+      // {
+      //   path: '/wechat/material',
+      //   name: '素材管理',
+      //   component: './wechat/material',
+      // },
+      // {
+      //   path: '/wechat/menus',
+      //   name: '自定义菜单',
+      //   component: './wechat/menus',
+      // },
+      // {
+      //   path: '/wechat/autoreply',
+      //   name: '消息自动回复',
+      //   component: './wechat/autoreply',
+      // },
+      // {
+      //   path: '/wechat/mass-msg',
+      //   name: '消息群发',
+      //   component: './wechat/mass-msg',
+      // },
+      // {
+      //   path: '/wechat/statistics',
+      //   name: '数据统计',
+      //   component: './wechat/statistics',
+      // },
       {
         component: './404',
       },
     ],
   },
-  {
-    name: '新的页面',
-    icon: 'table',
-    path: '/new-page',
-    component: './NewPage',
-    access: 'normalRouteFilter',
-  },
+  // {
+  //   name: '新的页面',
+  //   icon: 'table',
+  //   path: '/new-page',
+  //   component: './NewPage',
+  //   access: 'normalRouteFilter',
+  // },
   {
     path: '/',
     redirect: '/dashboard',
